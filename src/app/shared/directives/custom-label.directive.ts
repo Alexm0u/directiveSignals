@@ -1,4 +1,4 @@
-import { Directive, ElementRef, OnInit, Input } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 
 @Directive({
@@ -7,54 +7,68 @@ import { ValidationErrors } from '@angular/forms';
 export class CustomLabelDirective implements OnInit {
 
   private htmlElement?: ElementRef<HTMLElement>;
-  private _color: string  = 'red';
-  private _errors? : ValidationErrors | null; 
+  private _color: string = 'red';
+  private _errors?: ValidationErrors | null;
 
-  @Input() set color( value: string){
+  @Input() set color( value: string ) {
     this._color = value;
-    this.setSTyle();
+    this.setStyle();
   }
 
-  @Input() set errors (value: ValidationErrors | null | undefined){
+  @Input() set errors( value: ValidationErrors | null | undefined ) {
     this._errors = value;
     this.setErrorMessage();
   }
 
-  constructor(private el: ElementRef<HTMLElement>) {
 
+  constructor( private el: ElementRef<HTMLElement> ) {
+    // console.log('constructor de la directiva')
+    // console.log(el);
     this.htmlElement = el;
-
-   }
-
-  ngOnInit(): void {
-    this.setSTyle();
   }
 
-  setSTyle():void{
-    if (!this.htmlElement)return;
+  ngOnInit(): void {
+    this.setStyle();
+  }
 
-this.htmlElement!.nativeElement.style.color = this._color
+
+  setStyle():void {
+    if ( !this.htmlElement )return;
+
+    this.htmlElement!.nativeElement.style.color = this._color;
   }
 
   setErrorMessage():void {
-    if(!this.htmlElement) return;
-    if ( !this._errors) {
-      this.htmlElement.nativeElement.innerText = ' No hay errores ';
+    if ( !this.htmlElement )return;
+    if ( !this._errors ) {
+      this.htmlElement.nativeElement.innerText = '';
       return;
     }
 
     const errors = Object.keys(this._errors);
+    console.log(errors)
 
-    if( errors.includes('required')){
-      const min = this._errors!['minlength']['requiredLength'];
-      const current = this._errors!['minlength']['actualLength']
-      this.htmlElement.nativeElement.innerText = `Mínimo ${current}/${min} caracteres`;
+    if ( errors.includes('required') )  {
+      this.htmlElement.nativeElement.innerText = 'Este campo es requerido.';
       return;
     }
 
-    if (errors.includes('email')) {
-      this.htmlElement.nativeElement.innerText = 'No tiene formato de mail'
+    if ( errors.includes('minlength') )  {
+      const min = this._errors!['minlength']['requiredLength'];
+      const current = this._errors!['minlength']['actualLength'];
+
+      this.htmlElement.nativeElement.innerText = `Mínimo ${current}/${ min } caracteres.`;
+      return;
     }
+
+    if ( errors.includes('email') )  {
+      this.htmlElement.nativeElement.innerText = 'No tiene formato de correo.';
+      return;
+    }
+
+
+
   }
+
 
 }

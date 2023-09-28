@@ -12,7 +12,7 @@ import { CustomLabelDirective } from './directives/custom-label.directive';
     CommonModule
   ],
   exports: [
-    CustomLabelDirective
+    CustomLabelDirective,
   ]
 })
 export class SharedModule { }
