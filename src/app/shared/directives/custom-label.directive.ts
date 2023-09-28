@@ -46,8 +46,14 @@ this.htmlElement!.nativeElement.style.color = this._color
     const errors = Object.keys(this._errors);
 
     if( errors.includes('required')){
-      this.htmlElement.nativeElement.innerText = 'Este campo es requerido';
+      const min = this._errors!['minlength']['requiredLength'];
+      const current = this._errors!['minlength']['actualLength']
+      this.htmlElement.nativeElement.innerText = `Mínimo ${current}/${min} caracteres`;
       return;
+    }
+
+    if (errors.includes('email')) {
+      this.htmlElement.nativeElement.innerText = 'No tiene formato de mail'
     }
   }
 
